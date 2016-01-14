@@ -32,17 +32,16 @@ namespace compiler {
                     break;
             }
         }
-
         if (input.getChar() != '\n')
             Reporter::expected("New line");
     }
 
     void Parser::assignment()
     {
-        char name = input.getName();
+        std::string name = input.getName();
         input.match('=');
         expression();
-        output.emitLine("LEA " + Cradle::toString(name) + "(PC),A0");
+        output.emitLine("LEA " + name + "(PC),A0");
         output.emitLine("MOVE D0,(A0)");
     }
 
@@ -71,21 +70,19 @@ namespace compiler {
         } else if (Cradle::isAlpha(input.getChar())) {
             indent();
         } else {
-            output.emitLine("MOVE #" + Cradle::toString(input.getNum())
-                    + ",D0");
+            output.emitLine("MOVE #" + input.getNum() + ",D0");
         }
     }
 
     void Parser::indent()
     {
-        char name = input.getName();
+        std::string name = input.getName();
         if (input.getChar() == '(') {
             input.match('(');
             input.match(')');
-            output.emitLine("BSR " + Cradle::toString(name));
+            output.emitLine("BSR " + name);
         } else {
-            output.emitLine("MOVE " + Cradle::toString(name) 
-                   + "(PC),D0");
+            output.emitLine("MOVE " + name + "(PC),D0");
         }
     }
 

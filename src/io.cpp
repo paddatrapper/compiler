@@ -7,6 +7,7 @@
  *
  *         Author:  Kyle Robbertze (kr), paddatrapper@gmail.com
  */
+#include <ctype.h>
 #include <iostream>
 #include <stdlib.h>
 #include "cradle.h"
@@ -31,24 +32,30 @@ namespace compiler {
         return look;
     }
 
-    char Input::getName()
+    std::string Input::getName()
     {
         if (!Cradle::isAlpha(look)) {
             Reporter::expected("Name");
         }
-        char currentChar = getChar();
-        getNextChar();
-        return currentChar;
+        std::string token {""};
+        while (Cradle::isAlNum(look)) {
+            token += Cradle::toString(toupper(look));
+            getNextChar();
+        }
+        return token;
     }
 
-    char Input::getNum()
+    std::string Input::getNum()
     {
         if (!Cradle::isDigit(look)) {
             Reporter::expected("Integer");
         }
-        char currentChar = getChar();
-        getNextChar();
-        return currentChar;
+        std::string token {""};
+        while (Cradle::isDigit(look)) {
+            token += Cradle::toString(look);
+            getNextChar();
+        }
+        return token;
     }
 
     void Input::match(char c)

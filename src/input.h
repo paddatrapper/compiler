@@ -11,6 +11,7 @@
 #define _INPUT_H
 
 #include <iostream>
+#include <string>
 
 namespace compiler {
 class Input
@@ -19,8 +20,8 @@ class Input
         Input(FILE *stream);
         void getNextChar();
         char getChar();
-        char getName();
-        char getNum();
+        std::string getName();
+        std::string getNum();
         void match(char c);
     private:
         char look;
