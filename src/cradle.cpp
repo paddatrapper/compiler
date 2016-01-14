@@ -24,6 +24,11 @@ namespace compiler {
         return (bool) isdigit(c);
     }
 
+    bool Cradle::isAlNum(char c)
+    {
+        return isAlpha(c) || isDigit(c);
+    }
+
     std::string Cradle::toString(char c)
     {
         std::stringstream ss;
