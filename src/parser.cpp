@@ -32,8 +32,9 @@ namespace compiler {
                     break;
             }
         }
-        if (input.getChar() != '\n')
-            Reporter::expected("New line");
+        if (!Cradle::isParentheses(input.getChar()) &&
+                    input.getChar() != '\n')
+            Reporter::expected("New line", input.getChar());
     }
 
     void Parser::assignment()
