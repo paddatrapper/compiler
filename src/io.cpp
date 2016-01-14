@@ -20,6 +20,7 @@ namespace compiler {
     {
         this->stream = stream;
         getNextChar();
+        skipWhite();
     }
 
     void Input::getNextChar()
@@ -34,37 +35,46 @@ namespace compiler {
 
     std::string Input::getName()
     {
-        if (!Cradle::isAlpha(look)) {
-            Reporter::expected("Name");
+        if (!Cradle::isAlpha(getChar())) {
+            Reporter::expected("Name", getChar());
         }
         std::string token {""};
-        while (Cradle::isAlNum(look)) {
-            token += Cradle::toString(toupper(look));
+        while (Cradle::isAlNum(getChar())) {
+            token += Cradle::toString(toupper(getChar()));
             getNextChar();
+            skipWhite();
         }
         return token;
     }
 
     std::string Input::getNum()
     {
-        if (!Cradle::isDigit(look)) {
-            Reporter::expected("Integer");
+        if (!Cradle::isDigit(getChar())) {
+            Reporter::expected("Integer", getChar());
         }
         std::string token {""};
-        while (Cradle::isDigit(look)) {
-            token += Cradle::toString(look);
+        while (Cradle::isDigit(getChar())) {
+            token += Cradle::toString(getChar());
             getNextChar();
+            skipWhite();
         }
         return token;
     }
 
+    void Input::skipWhite()
+    {
+        while (Cradle::isWhite(getChar()))
+        {
+            getNextChar();
+        }
+    }
+
     void Input::match(char c)
     {
-        if (getChar() == c)
-            getNextChar();
-        else {
-            Reporter::expected("'" + Cradle::toString(c) + "'");
-        }
+        if (getChar() != c)
+            Reporter::expected("'" + Cradle::toString(c) + "'", getChar());
+        getNextChar();
+        skipWhite();
     }
 
     void Reporter::error(std::string message)
@@ -78,9 +88,9 @@ namespace compiler {
         exit(EXIT_FAILURE);
     }
 
-    void Reporter::expected(std::string message)
+    void Reporter::expected(std::string message, char expected)
     {
-        abort(message + " Expected");
+        abort(message + " Expected, but " + Cradle::toString(expected) + " found.");
     }
 
     

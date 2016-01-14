@@ -22,6 +22,7 @@ class Input
         char getChar();
         std::string getName();
         std::string getNum();
+        void skipWhite();
         void match(char c);
     private:
         char look;
