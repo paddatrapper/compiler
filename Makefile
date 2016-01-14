@@ -4,10 +4,10 @@ BUILD_DIR = build
 SRC_DIR = src
 CXXFLAGS = -Wall -std=c++11 -I${SRC_DIR}
 
-_OBJS = translator.o cradle.o io.o
+_OBJS = parser.o cradle.o io.o
 OBJS = $(patsubst %, ${BUILD_DIR}/%, ${_OBJS})
 
-_DEPS = translator.h cradle.h reporter.h input.h output.h
+_DEPS = parser.h cradle.h reporter.h input.h output.h
 DEPS = $(patsubst %, ${SRC_DIR}/%, ${_DEPS})
 
 .PHONY: all

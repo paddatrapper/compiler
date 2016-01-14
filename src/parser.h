@@ -15,10 +15,10 @@
 #include "output.h"
 
 namespace compiler {
-class Translator
+class Parser
 {
     public:
-        Translator() {};
+        Parser() {};
         void expression();
         void assignment();
         void term();
@@ -28,7 +28,6 @@ class Translator
         void subtract();
         void multiply();
         void divide();
-    protected:
     private:
         Input input{stdin};
         Output output{};

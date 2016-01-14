@@ -12,10 +12,10 @@
 #include "input.h"
 #include "output.h"
 #include "reporter.h"
-#include "translator.h"
+#include "parser.h"
 
 namespace compiler {
-    void Translator::expression()
+    void Parser::expression()
     {
         if (Cradle::isAddOp(input.getChar()))
             output.emitLine("CLR D0");
@@ -37,7 +37,7 @@ namespace compiler {
             Reporter::expected("New line");
     }
 
-    void Translator::assignment()
+    void Parser::assignment()
     {
         char name = input.getName();
         input.match('=');
@@ -46,7 +46,7 @@ namespace compiler {
         output.emitLine("MOVE D0,(A0)");
     }
 
-    void Translator::term()
+    void Parser::term()
     {
         factor();
         while (Cradle::isMulOp(input.getChar())) {
@@ -62,7 +62,7 @@ namespace compiler {
         }
     }
 
-    void Translator::factor()
+    void Parser::factor()
     {
         if (Cradle::isParentheses(input.getChar())) {
             input.match('(');
@@ -76,7 +76,7 @@ namespace compiler {
         }
     }
 
-    void Translator::indent()
+    void Parser::indent()
     {
         char name = input.getName();
         if (input.getChar() == '(') {
@@ -89,14 +89,14 @@ namespace compiler {
         }
     }
 
-    void Translator::add()
+    void Parser::add()
     {
         input.match('+');
         term();
         output.emitLine("ADD (SP)+,D0");
     }
 
-    void Translator::subtract()
+    void Parser::subtract()
     {
         input.match('-');
         term();
@@ -104,14 +104,14 @@ namespace compiler {
         output.emitLine("NEG D0");
     }
 
-    void Translator::multiply()
+    void Parser::multiply()
     {
         input.match('*');
         factor();
         output.emitLine("MULS (SP)+,D0");
     }
 
-    void Translator::divide()
+    void Parser::divide()
     {
         input.match('/');
         term();
@@ -124,7 +124,7 @@ namespace compiler {
  */
 int main(int argc, char *argv[])
 {
-    compiler::Translator translator{};
-    translator.assignment();
+    compiler::Parser parser{};
+    parser.assignment();
     return EXIT_SUCCESS;
 }
