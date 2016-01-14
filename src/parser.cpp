@@ -119,12 +119,3 @@ namespace compiler {
         output.emitLine("DIVS (SP)+,D1");
     }
 }
-/**
- * Main
- */
-int main(int argc, char *argv[])
-{
-    compiler::Parser parser{};
-    parser.assignment();
-    return EXIT_SUCCESS;
-}
