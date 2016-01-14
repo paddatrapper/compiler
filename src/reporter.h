@@ -19,7 +19,7 @@ class Reporter
         Reporter();
         static void error(std::string message);
         static void abort(std::string message);
-        static void expected(std::string message);
+        static void expected(std::string message, char expected);
 };
 }
 #endif
