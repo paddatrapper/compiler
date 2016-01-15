@@ -19,15 +19,9 @@ class Parser
 {
     public:
         Parser() {};
-        void expression();
-        void assignment();
-        void term();
-        void factor();
-        void indent();
-        void add();
-        void subtract();
-        void multiply();
-        void divide();
+        void program();
+        void block();
+        void other();
     private:
         Input input{stdin};
         Output output{};

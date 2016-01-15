@@ -34,7 +34,7 @@ namespace compiler {
     char Input::getName()
     {
         if (!Cradle::isAlpha(look)) {
-            Reporter::expected("Name");
+            Reporter::expected("Name", getChar());
         }
         char currentChar = getChar();
         getNextChar();
@@ -44,7 +44,7 @@ namespace compiler {
     char Input::getNum()
     {
         if (!Cradle::isDigit(look)) {
-            Reporter::expected("Integer");
+            Reporter::expected("Integer", getChar());
         }
         char currentChar = getChar();
         getNextChar();
@@ -56,7 +56,7 @@ namespace compiler {
         if (getChar() == c)
             getNextChar();
         else {
-            Reporter::expected("'" + Cradle::toString(c) + "'");
+            Reporter::expected("'" + Cradle::toString(c) + "'", getChar());
         }
     }
 
@@ -71,9 +71,9 @@ namespace compiler {
         exit(EXIT_FAILURE);
     }
 
-    void Reporter::expected(std::string message)
+    void Reporter::expected(std::string message, char found)
     {
-        abort(message + " Expected");
+        abort(message + " Expected, but " + Cradle::toString(found) + " found");
     }
 
     
