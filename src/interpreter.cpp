@@ -8,6 +8,7 @@
  *         Author:  Kyle Robbertze (kr), paddatrapper@gmail.com
  */
 
+#include <iostream>
 #include <stdlib.h>
 #include "cradle.h"
 #include "input.h"
@@ -16,6 +17,29 @@
 #include "reporter.h"
 
 namespace compiler {
+    void Interpreter::nextLine()
+    {
+        switch (input.getChar()) {
+            case '?':
+                userInput();
+                break;
+            case '!':
+                screenOutput();
+                break;
+            default:
+                assignment();
+                break;
+        }
+        newLine();
+    }
+    void Interpreter::assignment()
+    {
+        std::string name = input.getName();
+        input.match('=');
+        variables[name] = expression();
+        output.emitLine(Cradle::toString(variables[name]));
+    }
+
     int Interpreter::expression()
     {
         int value;
@@ -67,8 +91,35 @@ namespace compiler {
             int value = expression();
             input.match(')');
             return value;
+        } else if (Cradle::isAlpha(input.getChar())) {
+            return variables[input.getName()];
         } else {
             return input.getNum();
         }
+    }
+
+    void Interpreter::userInput()
+    {
+        input.match('?');
+        std::string var = input.getName();
+        input.getNextChar();
+        int value = input.getNum();
+        variables[var] = value;
+    }
+
+    void Interpreter::screenOutput()
+    {
+        input.match('!');
+        output.emitLine(Cradle::toString(variables[input.getName()]));
+    }
+
+    bool Interpreter::isNewLine()
+    {
+        return input.getChar() != '.';
+    }
+
+    void Interpreter::newLine() {
+        if (input.getChar() == '\n')
+            input.getNextChar();
     }
 }

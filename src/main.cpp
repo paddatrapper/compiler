@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
     //compiler::Parser parser{};
     //parser.assignment();
     compiler::Interpreter interpreter{};
-    std::cout << interpreter.expression() << '\n';
+    while (interpreter.isNewLine()) {
+        interpreter.nextLine();
+    }
     return EXIT_SUCCESS;
 }

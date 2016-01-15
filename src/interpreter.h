@@ -10,6 +10,8 @@
 #ifndef _INTERPRETER_H
 #define _INTERPRETER_H
 
+#include <string>
+#include <map>
 #include "cradle.h"
 #include "input.h"
 #include "output.h"
@@ -19,16 +21,19 @@ class Interpreter
 {
     public:
         Interpreter() {};
+        void nextLine();
+        void assignment();
         int expression();
-        //void assignment();
         int term();
         int factor();
-        //void indent();
-        //void add();
-        //void subtract();
-        //void multiply();
-        //void divide();
+        void userInput();
+        void screenOutput();
+        bool isNewLine();
+        void newLine();
     private:
+        typedef std::map<std::string, int> var_t;
+        const int CHAR_OFFSET = static_cast<int>('0');
+        var_t variables;
         Input input{stdin};
         Output output{};
 };

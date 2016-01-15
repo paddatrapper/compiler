@@ -31,14 +31,17 @@ namespace compiler {
         return look;
     }
 
-    char Input::getName()
+    std::string Input::getName()
     {
-        if (!Cradle::isAlpha(look)) {
+        if (!Cradle::isAlpha(getChar()))
             Reporter::expected("Name", getChar());
+        std::string token = "";
+        while (Cradle::isAlpha(getChar())) {
+            token += Cradle::toString(getChar());
+            getNextChar();
         }
-        char currentChar = getChar();
-        getNextChar();
-        return currentChar;
+        skipWhite();
+        return token;
     }
 
     int Input::getNum()
@@ -51,16 +54,24 @@ namespace compiler {
             value = 10 * value + (getChar() - OFFSET);
             getNextChar();
         }
+        skipWhite();
         return value;
     }
 
     void Input::match(char c)
     {
-        if (getChar() == c)
+        if (getChar() == c) {
             getNextChar();
-        else {
+            skipWhite();
+        } else {
             Reporter::expected("'" + Cradle::toString(c) + "'", getChar());
         }
+    }
+
+    void Input::skipWhite()
+    {
+        while (Cradle::isWhite(getChar()))
+            getNextChar();
     }
 
     void Reporter::error(std::string message)

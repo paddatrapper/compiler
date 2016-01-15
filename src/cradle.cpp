@@ -29,11 +29,24 @@ namespace compiler {
         return isAlpha(c) || isDigit(c);
     }
 
+    bool Cradle::isWhite(char c)
+    {
+        return c == ' ' || c == '\t';
+    }
     std::string Cradle::toString(char c)
     {
         std::stringstream ss;
         std::string string;
         ss << c;
+        ss >> string;
+        return string;
+    }
+
+    std::string Cradle::toString(int x)
+    {
+        std::stringstream ss;
+        std::string string;
+        ss << x;
         ss >> string;
         return string;
     }
