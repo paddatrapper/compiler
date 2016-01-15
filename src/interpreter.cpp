@@ -15,8 +15,6 @@
 #include "output.h"
 #include "reporter.h"
 
-#include <iostream>
-
 namespace compiler {
     int Interpreter::expression()
     {
@@ -24,19 +22,53 @@ namespace compiler {
         if (Cradle::isAddOp(input.getChar()))
             value = 0;
         else 
-            value = input.getNum() - OFFSET;
+            value = term();
         while (Cradle::isAddOp(input.getChar())) {
             switch (input.getChar()) {
                 case '+': 
                     input.match('+');
-                    value += input.getNum() - OFFSET;
+                    value += term();
                     break;
                 case '-':
                     input.match('-');
-                    value -= input.getNum() - OFFSET;
+                    value -= term();
                     break;
             }
         }
         return value;
     } 
+
+    int Interpreter::term()
+    {
+        int value;
+        if (Cradle::isMulOp(input.getChar()))
+            value = 0;
+        else 
+            value = factor();
+        while (Cradle::isMulOp(input.getChar())) {
+            switch (input.getChar()) {
+                case '*': 
+                    input.match('*');
+                    value *= factor();
+                    break;
+                case '/':
+                    input.match('/');
+                    value /= factor();
+                    break;
+            }
+        }
+        return value;
+    } 
+
+    int Interpreter::factor()
+    {
+        if (input.getChar() == '(') {
+            input.match('(');
+            int value = expression();
+            input.match(')');
+            return value;
+        } else {
+            return input.getNum();
+        }
+    }
 }

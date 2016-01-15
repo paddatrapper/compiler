@@ -21,15 +21,14 @@ class Interpreter
         Interpreter() {};
         int expression();
         //void assignment();
-        //void term();
-        //void factor();
+        int term();
+        int factor();
         //void indent();
-        void add();
-        void subtract();
+        //void add();
+        //void subtract();
         //void multiply();
         //void divide();
     private:
-        const int OFFSET = 48;
         Input input{stdin};
         Output output{};
 };

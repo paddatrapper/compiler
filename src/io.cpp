@@ -41,14 +41,17 @@ namespace compiler {
         return currentChar;
     }
 
-    char Input::getNum()
+    int Input::getNum()
     {
-        if (!Cradle::isDigit(look)) {
+        int value = 0;
+        if (!Cradle::isDigit(getChar())) {
             Reporter::expected("Integer", getChar());
         }
-        char currentChar = getChar();
-        getNextChar();
-        return currentChar;
+        while (Cradle::isDigit(getChar())) {
+            value = 10 * value + (getChar() - OFFSET);
+            getNextChar();
+        }
+        return value;
     }
 
     void Input::match(char c)

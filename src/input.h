@@ -20,9 +20,10 @@ class Input
         void getNextChar();
         char getChar();
         char getName();
-        char getNum();
+        int getNum();
         void match(char c);
     private:
+        const int OFFSET = '0';
         char look;
         FILE *stream;
 };
