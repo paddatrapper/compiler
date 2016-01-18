@@ -10,7 +10,7 @@
 #ifndef _TRANSLATOR_H
 #define _TRANSLATOR_H
 
-#include "cradle.h"
+#include <string>
 #include "input.h"
 #include "output.h"
 
@@ -21,10 +21,14 @@ class Parser
         Parser() {};
         void program();
         void block();
+        void doIf();
+        void condition();
         void other();
+        std::string newLabel();
     private:
         Input input{stdin};
         Output output{};
+        int labelCount{0};
 };
 }
 #endif

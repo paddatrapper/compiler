@@ -14,27 +14,65 @@
 #include "reporter.h"
 #include "parser.h"
 
-#include <iostream>
-
 namespace compiler {
     void Parser::program()
     {
+        input.match('{');
         block();
-        if (input.getChar() != 'e')
+        if (input.getChar() != '}')
             Reporter::expected("End", input.getChar());
         output.emitLine("END");
     }
 
     void Parser::block()
     {
-        while (input.getChar() != 'e')
-            other();
+        while (input.getChar() != '}') {
+            switch (input.getChar()) {
+                case 'i':
+                    doIf();
+                    break;
+                default:
+                    other();
+                    break;
+            }
+        }
+    }
+
+    void Parser::doIf()
+    {
+        input.match('i');
+        std::string l1 = newLabel();
+        std::string l2 = l1;
+        condition();
+        output.emitLine("BEQ " + l1);
+        input.match('{');
+        block();
+        input.match('}');
+        if (input.getChar() == 'e') {
+            input.match('e');
+            l2 = newLabel();
+            output.emitLine("BRA " + l2);
+            output.postLabel(l1);
+            input.match('{');
+            block();
+            input.match('}');
+        }
+        output.postLabel(l2);
+    }
+
+    void Parser::condition()
+    {
+        output.emitLine("<condition>");
     }
 
     void Parser::other()
     {
         output.emitLine(Cradle::toString(input.getName()));
-        input.getNextChar();
+    }
+
+    std::string Parser::newLabel()
+    {
+        return "L" + Cradle::toString(labelCount++);
     }
 }
 /**

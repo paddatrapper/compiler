@@ -16,6 +16,7 @@ class Output
         Output() {};
         void emit(std::string message);
         void emitLine(std::string message);
+        void postLabel(std::string label);
     private:
         char look;
         FILE *stream;

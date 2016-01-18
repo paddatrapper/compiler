@@ -87,4 +87,9 @@ namespace compiler {
         emit(message);
         std::cout << '\n';
     }
+
+    void Output::postLabel(std::string label)
+    {
+        emitLine(label + ":");
+    }
 }

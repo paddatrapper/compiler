@@ -38,6 +38,15 @@ namespace compiler {
         return string;
     }
 
+    std::string Cradle::toString(int n)
+    {
+        std::stringstream ss;
+        std::string string;
+        ss << n;
+        ss >> string;
+        return string;
+    }
+
     bool Cradle::isAddOp(char c)
     {
         return c == '+' ||
