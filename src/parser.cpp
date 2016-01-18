@@ -34,6 +34,7 @@ namespace compiler {
     void Parser::other()
     {
         output.emitLine(Cradle::toString(input.getName()));
+        input.getNextChar();
     }
 }
 /**
