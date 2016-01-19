@@ -21,8 +21,9 @@ class Parser
         Parser() {};
         void program();
         void block();
-        void doIf();
         void condition();
+        void doIf();
+        void doWhile();
         void other();
         std::string newLabel();
     private:

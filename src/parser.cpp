@@ -31,11 +31,19 @@ namespace compiler {
                 case 'i':
                     doIf();
                     break;
+                case 'w':
+                    doWhile();
+                    break;
                 default:
                     other();
                     break;
             }
         }
+    }
+
+    void Parser::condition()
+    {
+        output.emitLine("<condition>");
     }
 
     void Parser::doIf()
@@ -60,9 +68,19 @@ namespace compiler {
         output.postLabel(l2);
     }
 
-    void Parser::condition()
+    void Parser::doWhile()
     {
-        output.emitLine("<condition>");
+        input.match('w');
+        std::string l1 = newLabel();
+        std::string l2 = newLabel();
+        output.postLabel(l1);
+        condition();
+        output.emitLine("BEQ " + l2);
+        input.match('{');
+        block();
+        input.match('}');
+        output.emitLine("BRA " + l1);
+        output.postLabel(l2);
     }
 
     void Parser::other()
