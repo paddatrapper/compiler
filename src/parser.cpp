@@ -34,6 +34,12 @@ namespace compiler {
                 case 'w':
                     doWhile();
                     break;
+                case 'l':
+                    doLoop();
+                    break;
+                case 'd':
+                    doDoWhile();
+                    break;
                 default:
                     other();
                     break;
@@ -68,6 +74,17 @@ namespace compiler {
         output.postLabel(l2);
     }
 
+    void Parser::doLoop()
+    {
+        input.match('l');
+        std::string l = newLabel();
+        output.postLabel(l);
+        input.match('{');
+        block();
+        input.match('}');
+        output.emitLine("BRA " + l);
+    }
+
     void Parser::doWhile()
     {
         input.match('w');
@@ -83,6 +100,19 @@ namespace compiler {
         output.postLabel(l2);
     }
 
+    void Parser::doDoWhile()
+    {
+        input.match('d');
+        std::string l = newLabel();
+        input.match('{');
+        output.postLabel(l);
+        block();
+        input.match('}');
+        input.match('w');
+        condition();
+        output.emitLine("BEQ " + l);
+    }
+
     void Parser::other()
     {
         output.emitLine(Cradle::toString(input.getName()));
@@ -96,7 +126,7 @@ namespace compiler {
 /**
  * Main
  */
-int main(int argc, char *argv[])
+int main()
 {
     compiler::Parser parser{};
     parser.program();
