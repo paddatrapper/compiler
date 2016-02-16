@@ -22,15 +22,18 @@ class Parser
         void program();
         void block();
         void condition();
+        void expression();
         void doIf();
         void doLoop();
         void doWhile();
         void doDoWhile();
+        void doFor();
+        void doDo();
         void other();
         std::string newLabel();
     private:
         Input input{stdin};
-        Output output{};
+        Output output;
         int labelCount{0};
 };
 }

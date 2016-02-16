@@ -37,8 +37,14 @@ namespace compiler {
                 case 'l':
                     doLoop();
                     break;
-                case 'd':
+                case 'r':
                     doDoWhile();
+                    break;
+                case 'f':
+                    doFor();
+                    break;
+                case 'd':
+                    doDo();
                     break;
                 default:
                     other();
@@ -50,6 +56,12 @@ namespace compiler {
     void Parser::condition()
     {
         output.emitLine("<condition>");
+    }
+
+    void Parser::expression()
+    {
+        output.emitLine("<expression>");
+        input.getNextChar();
     }
 
     void Parser::doIf()
@@ -102,7 +114,7 @@ namespace compiler {
 
     void Parser::doDoWhile()
     {
-        input.match('d');
+        input.match('r');
         std::string l = newLabel();
         input.match('{');
         output.postLabel(l);
@@ -111,6 +123,47 @@ namespace compiler {
         input.match('w');
         condition();
         output.emitLine("BEQ " + l);
+    }
+
+    void Parser::doFor()
+    {
+        input.match('f');
+        std::string l1 = newLabel();
+        std::string l2 = newLabel();
+        input.match('(');
+        char name = input.getName();
+        input.match('=');
+        expression();
+        output.emitLine("SUBQ #1,D0");
+        output.emitLine("LEA " + Cradle::toString(name) + "(PC),A0");
+        output.emitLine("MOVE D0,-(SP)");
+        output.postLabel(l1);
+        output.emitLine("LEA " + Cradle::toString(name) + "(PC),A0");
+        output.emitLine("MOVE (A0),D0");
+        output.emitLine("ADDQ #1,D0");
+        output.emitLine("MOVE D0,(A0)");
+        output.emitLine("CMP (SP),D0");
+        output.emitLine("BGT " + l2);
+        input.match(')');
+        input.match('{');
+        block();
+        output.emitLine("BRA " + l1);
+        output.postLabel(l2);
+        output.emitLine("ADDQ #2,SP");
+        input.match('}');
+    }
+
+    void Parser::doDo()
+    {
+        input.match('d');
+        std::string l1 = newLabel();
+        expression();
+        output.emitLine("SUBQ #1,D0");
+        output.postLabel(l1);
+        output.emitLine("MOVE D0,-(SP)");
+        block();
+        output.emitLine("MOVE (SP)+,D0");
+        output.emitLine("DBRA D0," + l1);
     }
 
     void Parser::other()
