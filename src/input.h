@@ -11,6 +11,7 @@
 #define _INPUT_H
 
 #include <iostream>
+#include <string>
 
 namespace compiler {
 class Input

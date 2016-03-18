@@ -34,27 +34,27 @@ namespace compiler {
 
     char Input::getName()
     {
-        if (!Cradle::isAlpha(look)) {
+        if (!Cradle::isAlpha(getChar())) {
             Reporter::expected("Name", getChar());
         }
-        char currentChar = getChar();
+        char c = getChar();
         getNextChar();
-        return currentChar;
+        return c;
     }
 
     char Input::getNum()
     {
-        if (!Cradle::isDigit(look)) {
+        if (!Cradle::isDigit(getChar())) {
             Reporter::expected("Integer", getChar());
         }
-        char currentChar = getChar();
+        char c = getChar();
         getNextChar();
-        return currentChar;
+        return c;
     }
 
     bool Input::getBoolean()
     {
-        if (!Cradle::isBoolean(look)) {
+        if (!Cradle::isBoolean(getChar())) {
             Reporter::expected("Boolean literal", getChar());
         }
         bool b = toupper(getChar()) == 'T';
@@ -64,11 +64,9 @@ namespace compiler {
 
     void Input::match(char c)
     {
-        if (getChar() == c)
-            getNextChar();
-        else {
+        if (getChar() != c)
             Reporter::expected("'" + Cradle::toString(c) + "'", getChar());
-        }
+        getNextChar();
     }
 
     void Reporter::error(std::string message)
