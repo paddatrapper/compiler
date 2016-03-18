@@ -20,15 +20,16 @@ class Parser
     public:
         Parser() {};
         void program();
-        void block();
+        void block(std::string l);
         void condition();
         void expression();
-        void doIf();
+        void doIf(std::string l);
         void doLoop();
         void doWhile();
         void doDoWhile();
         void doFor();
         void doDo();
+        void doBreak(std::string l);
         void other();
         std::string newLabel();
     private:

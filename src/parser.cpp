@@ -18,18 +18,18 @@ namespace compiler {
     void Parser::program()
     {
         input.match('{');
-        block();
+        block("");
         if (input.getChar() != '}')
             Reporter::expected("End", input.getChar());
         output.emitLine("END");
     }
 
-    void Parser::block()
+    void Parser::block(std::string l)
     {
         while (input.getChar() != '}') {
             switch (input.getChar()) {
                 case 'i':
-                    doIf();
+                    doIf(l);
                     break;
                 case 'w':
                     doWhile();
@@ -45,6 +45,9 @@ namespace compiler {
                     break;
                 case 'd':
                     doDo();
+                    break;
+                case 'b':
+                    doBreak(l);
                     break;
                 default:
                     other();
@@ -64,7 +67,7 @@ namespace compiler {
         input.getNextChar();
     }
 
-    void Parser::doIf()
+    void Parser::doIf(std::string l)
     {
         input.match('i');
         std::string l1 = newLabel();
@@ -72,7 +75,7 @@ namespace compiler {
         condition();
         output.emitLine("BEQ " + l1);
         input.match('{');
-        block();
+        block(l);
         input.match('}');
         if (input.getChar() == 'e') {
             input.match('e');
@@ -80,7 +83,7 @@ namespace compiler {
             output.emitLine("BRA " + l2);
             output.postLabel(l1);
             input.match('{');
-            block();
+            block(l);
             input.match('}');
         }
         output.postLabel(l2);
@@ -89,12 +92,14 @@ namespace compiler {
     void Parser::doLoop()
     {
         input.match('l');
-        std::string l = newLabel();
-        output.postLabel(l);
+        std::string l1 = newLabel();
+        std::string l2 = newLabel();
+        output.postLabel(l1);
         input.match('{');
-        block();
+        block(l2);
         input.match('}');
-        output.emitLine("BRA " + l);
+        output.emitLine("BRA " + l1);
+        output.postLabel(l2);
     }
 
     void Parser::doWhile()
@@ -106,7 +111,7 @@ namespace compiler {
         condition();
         output.emitLine("BEQ " + l2);
         input.match('{');
-        block();
+        block(l2);
         input.match('}');
         output.emitLine("BRA " + l1);
         output.postLabel(l2);
@@ -115,14 +120,16 @@ namespace compiler {
     void Parser::doDoWhile()
     {
         input.match('r');
-        std::string l = newLabel();
+        std::string l1 = newLabel();
+        std::string l2 = newLabel();
         input.match('{');
-        output.postLabel(l);
-        block();
+        output.postLabel(l1);
+        block(l2);
         input.match('}');
         input.match('w');
         condition();
-        output.emitLine("BEQ " + l);
+        output.emitLine("BEQ " + l1);
+        output.postLabel(l2);
     }
 
     void Parser::doFor()
@@ -146,7 +153,7 @@ namespace compiler {
         output.emitLine("BGT " + l2);
         input.match(')');
         input.match('{');
-        block();
+        block(l2);
         output.emitLine("BRA " + l1);
         output.postLabel(l2);
         output.emitLine("ADDQ #2,SP");
@@ -157,13 +164,27 @@ namespace compiler {
     {
         input.match('d');
         std::string l1 = newLabel();
+        std::string l2 = newLabel();
         expression();
         output.emitLine("SUBQ #1,D0");
         output.postLabel(l1);
         output.emitLine("MOVE D0,-(SP)");
-        block();
+        block(l2);
         output.emitLine("MOVE (SP)+,D0");
         output.emitLine("DBRA D0," + l1);
+        output.emitLine("SUBQ #2,SP");
+        output.postLabel(l2);
+        output.emitLine("ADDQ #2,SP");
+    }
+
+    void Parser::doBreak(std::string l)
+    {
+        input.match('b');
+        if (l != "") {
+            output.emitLine("BRA " + l);
+        } else {
+            Reporter::abort("No loop to break from");
+        }
     }
 
     void Parser::other()
