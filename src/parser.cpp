@@ -67,15 +67,74 @@ namespace compiler {
         input.getNextChar();
     }
 
+    void Parser::relation() 
+    {
+        output.emitLine("<relation>");
+        input.getNextChar();
+    }
+
     void Parser::boolExpression()
     {
-        if (!Cradle::isBoolean(input.getChar())) {
-            Reporter::expected("Boolean literal", input.getChar());
+        boolTerm();
+        while (Cradle::isOrOp(input.getChar())) {
+            output.emitLine("MOVE D0,-(SP)");
+            switch (input.getChar()) {
+                case '|':
+                    boolOr();
+                    break;
+                case '~':
+                    boolXor();
+                    break;
+            }
         }
-        if (input.getBoolean()) {
-            output.emitLine("MOVE #-1,D0");
+    }
+
+    void Parser::boolOr()
+    {
+        input.match('|');
+        boolTerm();
+        output.emitLine("OR (SP)+,D0");
+    }
+
+    void Parser::boolXor()
+    {
+        input.match('~');
+        boolTerm();
+        output.emitLine("EOR (SP)+,D0");
+    }
+
+    void Parser::boolTerm()
+    {
+        boolNotFactor();
+        while (input.getChar() == '&') {
+            output.emitLine("MOVE D0,-(SP)");
+            input.match('&');
+            boolNotFactor();
+            output.emitLine("AND (SP)+,D0");
+        }
+    }
+
+    void Parser::boolFactor()
+    {
+        if (Cradle::isBoolean(input.getChar())) {
+            if (input.getBoolean()) {
+                output.emitLine("MOVE #-1,D0");
+            } else {
+                output.emitLine("CLR D0");
+            }
         } else {
-            output.emitLine("CLR D0");
+            relation();
+        }
+    }
+
+    void Parser::boolNotFactor()
+    {
+        if (input.getChar() == '!') {
+            input.match('!');
+            boolFactor();
+            output.emitLine("EOR #-1,D0");
+        } else {
+            boolFactor();
         }
     }
 

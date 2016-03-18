@@ -78,4 +78,10 @@ namespace compiler {
         return c == '(' ||
             c == ')';
     }
+
+    bool Cradle::isOrOp(char c)
+    {
+        return c == '|' ||
+            c == '~';
+    }
 }

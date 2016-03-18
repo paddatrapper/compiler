@@ -26,12 +26,16 @@ class Cradle
         static bool isDigit(char c);
         static bool isAlNum(char c);
         static bool isBoolean(char c);
+
         static std::string toString(char c);
         static std::string toString(bool c);
         static std::string toString(int n);
+
         static bool isAddOp(char c);
         static bool isMulOp(char c);
         static bool isParentheses(char c);
+
+        static bool isOrOp(char c);
     private:
         Output output{};
 };

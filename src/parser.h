@@ -23,7 +23,15 @@ class Parser
         void block(std::string l);
         void condition();
         void expression();
+        void relation();
+
         void boolExpression();
+        void boolOr();
+        void boolXor();
+        void boolTerm();
+        void boolFactor();
+        void boolNotFactor();
+
         void doIf(std::string l);
         void doLoop();
         void doWhile();
@@ -31,9 +39,11 @@ class Parser
         void doFor();
         void doDo();
         void doBreak(std::string l);
+
         void other();
-        std::string newLabel();
     private:
+        std::string newLabel();
+
         Input input{stdin};
         Output output;
         int labelCount{0};
