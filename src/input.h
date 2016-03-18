@@ -21,6 +21,7 @@ class Input
         char getChar();
         char getName();
         char getNum();
+        bool getBoolean();
         void match(char c);
     private:
         char look;

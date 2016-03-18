@@ -67,6 +67,18 @@ namespace compiler {
         input.getNextChar();
     }
 
+    void Parser::boolExpression()
+    {
+        if (!Cradle::isBoolean(input.getChar())) {
+            Reporter::expected("Boolean literal", input.getChar());
+        }
+        if (input.getBoolean()) {
+            output.emitLine("MOVE #-1,D0");
+        } else {
+            output.emitLine("CLR D0");
+        }
+    }
+
     void Parser::doIf(std::string l)
     {
         input.match('i');
@@ -203,6 +215,6 @@ namespace compiler {
 int main()
 {
     compiler::Parser parser{};
-    parser.program();
+    parser.boolExpression();
     return EXIT_SUCCESS;
 }

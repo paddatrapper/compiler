@@ -7,6 +7,7 @@
  *
  *         Author:  Kyle Robbertze (kr), paddatrapper@gmail.com
  */
+#include <ctype.h>
 #include <iostream>
 #include <stdlib.h>
 #include "cradle.h"
@@ -49,6 +50,16 @@ namespace compiler {
         char currentChar = getChar();
         getNextChar();
         return currentChar;
+    }
+
+    bool Input::getBoolean()
+    {
+        if (!Cradle::isBoolean(look)) {
+            Reporter::expected("Boolean literal", getChar());
+        }
+        bool b = toupper(getChar()) == 'T';
+        getNextChar();
+        return b;
     }
 
     void Input::match(char c)

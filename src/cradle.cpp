@@ -29,11 +29,25 @@ namespace compiler {
         return isAlpha(c) || isDigit(c);
     }
 
+    bool Cradle::isBoolean(char c)
+    {
+        return toupper(c) == 'T' || toupper(c) == 'F';
+    }
+
     std::string Cradle::toString(char c)
     {
         std::stringstream ss;
         std::string string;
         ss << c;
+        ss >> string;
+        return string;
+    }
+
+    std::string Cradle::toString(bool b)
+    {
+        std::stringstream ss;
+        std::string string;
+        ss << b;
         ss >> string;
         return string;
     }

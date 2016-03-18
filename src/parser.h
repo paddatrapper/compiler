@@ -23,6 +23,7 @@ class Parser
         void block(std::string l);
         void condition();
         void expression();
+        void boolExpression();
         void doIf(std::string l);
         void doLoop();
         void doWhile();
