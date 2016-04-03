@@ -84,4 +84,12 @@ namespace compiler {
         return c == '|' ||
             c == '~';
     }
+
+    bool Cradle::isRelOp(char c)
+    {
+        return c == '=' ||
+            c == '#' ||
+            c == '<' ||
+            c == '>';
+    }
 }

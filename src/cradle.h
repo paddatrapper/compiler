@@ -36,6 +36,7 @@ class Cradle
         static bool isParentheses(char c);
 
         static bool isOrOp(char c);
+        static bool isRelOp(char c);
     private:
         Output output{};
 };

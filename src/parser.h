@@ -25,6 +25,11 @@ class Parser
         void expression();
         void relation();
 
+        void equals();
+        void notEquals();
+        void lessThan();
+        void greaterThan();
+
         void boolExpression();
         void boolOr();
         void boolXor();

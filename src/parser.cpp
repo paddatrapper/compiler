@@ -69,8 +69,57 @@ namespace compiler {
 
     void Parser::relation() 
     {
-        output.emitLine("<relation>");
-        input.getNextChar();
+        expression();
+        if (Cradle::isRelOp(input.getChar())) {
+            output.emitLine("MOVE D0,(SP)-");
+            switch (input.getChar()) {
+                case '=':
+                    equals();
+                    break;
+                case '#':
+                    notEquals();
+                    break;
+                case '<':
+                    lessThan();
+                    break;
+                case '>':
+                    greaterThan();
+                    break;
+            }
+            output.emitLine("TST D0");
+        }
+    }
+
+    void Parser::equals()
+    {
+        input.match('=');
+        expression();
+        output.emitLine("CMP (SP)+,D0");
+        output.emitLine("SEQ D0");
+    }
+
+    void Parser::notEquals()
+    {
+        input.match('#');
+        expression();
+        output.emitLine("CMP (SP)+,D0");
+        output.emitLine("SNE D0");
+    }
+
+    void Parser::lessThan()
+    {
+        input.match('<');
+        expression();
+        output.emitLine("CMP (SP)+,S0");
+        output.emitLine("SGE D0");
+    }
+
+    void Parser::greaterThan()
+    {
+        input.match('>');
+        expression();
+        output.emitLine("CMP (SP)+,S0");
+        output.emitLine("SLE D0");
     }
 
     void Parser::boolExpression()
