@@ -26,6 +26,7 @@ class Cradle
         static bool isDigit(char c);
         static bool isAlNum(char c);
         static bool isBoolean(char c);
+        static bool isWhite(char c);
 
         static std::string toString(char c);
         static std::string toString(bool c);

@@ -68,6 +68,16 @@ namespace compiler {
         return b;
     }
 
+    void Input.skipWhite()
+    {
+        while (Cradle::isWhite(getChar())) {
+            getNextChar();
+        }
+        bool b = toupper(getChar()) == 'T';
+        getNextChar();
+        return b;
+    }
+
     void Input::match(char c)
     {
         if (getChar() != c)

@@ -23,6 +23,7 @@ class Input
         std::string getName();
         std::string getNum();
         bool getBoolean();
+        void skipWhite();
         void match(char c);
     private:
         char look;

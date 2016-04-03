@@ -34,6 +34,11 @@ namespace compiler {
         return toupper(c) == 'T' || toupper(c) == 'F';
     }
 
+    bool Cradle::isWhite(char c)
+    {
+        return c == ' ' || c == '\t';
+    }
+
     std::string Cradle::toString(char c)
     {
         std::stringstream ss;
