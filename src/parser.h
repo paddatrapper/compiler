@@ -53,7 +53,8 @@ class Parser
         void doDo();
         void doBreak(std::string l);
 
-        void other();
+        void fin();
+        void assignment();
     private:
         std::string newLabel();
 

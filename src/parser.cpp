@@ -27,6 +27,7 @@ namespace compiler {
     void Parser::block(std::string l)
     {
         while (input.getChar() != '}') {
+            fin();
             switch (input.getChar()) {
                 case 'i':
                     doIf(l);
@@ -50,9 +51,10 @@ namespace compiler {
                     doBreak(l);
                     break;
                 default:
-                    other();
+                    assignment();
                     break;
             }
+            fin();
         }
     }
 
@@ -402,9 +404,20 @@ namespace compiler {
         }
     }
 
-    void Parser::other()
+    void Parser::assignment()
     {
-        output.emitLine(Cradle::toString(input.getName()));
+        char name = input.getName();
+        input.match('=');
+        boolExpression();
+        output.emitLine("LEA " + Cradle::toString(name) + "(PC),A0");
+        output.emitLine("MOVE D0,(A0)");
+    }
+
+    void Parser::fin()
+    {
+        if (input.getChar() == '\n' || input.getChar() == '\r') {
+            input.getNextChar();
+        }
     }
 
     std::string Parser::newLabel()
