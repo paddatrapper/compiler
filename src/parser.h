@@ -21,7 +21,6 @@ class Parser
         Parser() {};
         void program();
         void block(std::string l);
-        void condition();
         void expression();
         void relation();
         void variable();

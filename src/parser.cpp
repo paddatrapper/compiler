@@ -56,11 +56,6 @@ namespace compiler {
         }
     }
 
-    void Parser::condition()
-    {
-        output.emitLine("<condition>");
-    }
-
     void Parser::expression()
     {
         term();
@@ -292,7 +287,7 @@ namespace compiler {
         input.match('i');
         std::string l1 = newLabel();
         std::string l2 = l1;
-        condition();
+        boolExpression();
         output.emitLine("BEQ " + l1);
         input.match('{');
         block(l);
@@ -328,7 +323,7 @@ namespace compiler {
         std::string l1 = newLabel();
         std::string l2 = newLabel();
         output.postLabel(l1);
-        condition();
+        boolExpression();
         output.emitLine("BEQ " + l2);
         input.match('{');
         block(l2);
@@ -347,7 +342,7 @@ namespace compiler {
         block(l2);
         input.match('}');
         input.match('w');
-        condition();
+        boolExpression();
         output.emitLine("BEQ " + l1);
         output.postLabel(l2);
     }
@@ -423,6 +418,6 @@ namespace compiler {
 int main()
 {
     compiler::Parser parser{};
-    parser.boolExpression();
+    parser.program();
     return EXIT_SUCCESS;
 }
