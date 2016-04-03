@@ -63,8 +63,18 @@ namespace compiler {
 
     void Parser::expression()
     {
-        output.emitLine("<expression>");
-        input.getNextChar();
+        term();
+        while (Cradle::isAddOp(input.getChar())) {
+            output.emitLine("MOVE D0,-(SP)");
+            switch (input.getChar()) {
+                case '+':
+                    add();
+                    break;
+                case '-':
+                    subtract();
+                    break;
+            }
+        }
     }
 
     void Parser::relation() 
@@ -120,6 +130,96 @@ namespace compiler {
         expression();
         output.emitLine("CMP (SP)+,S0");
         output.emitLine("SLE D0");
+    }
+
+    void Parser::variable()
+    {
+        char name = input.getName();
+        if (input.getChar() == '(') {
+            input.match('(');
+            expression();
+            input.match(')');
+            output.emitLine("BSR " + Cradle::toString(name));
+        } else {
+            output.emitLine("MOVE " + Cradle::toString(name) + "(PC),D0");
+        }
+    }
+
+    void Parser::factor()
+    {
+        if (input.getChar() == '(') {
+            input.match('(');
+            expression();
+            input.match(')');
+        } else if (Cradle::isAlpha(input.getChar())) {
+            variable();
+        } else {
+            output.emitLine("MOVE #" + Cradle::toString(input.getNum()) + ",D0");
+        }
+    }
+
+    void Parser::signedFactor()
+    {
+        if (input.getChar() == '+') {
+            input.getNextChar();
+        } else if (input.getChar() == '-') {
+            input.getNextChar();
+            if (Cradle::isDigit(input.getChar())) {
+                output.emitLine("MOVE #-" + Cradle::toString(input.getNum()) + ",D0");
+            } else {
+                factor();
+                output.emitLine("NEG D0");
+            }
+        } else {
+            factor();
+        }
+    }
+
+    void Parser::multiply()
+    {
+        input.match('*');
+        factor();
+        output.emitLine("MULS (SP)+,D0");
+    }
+
+    void Parser::divide()
+    {
+        input.match('/');
+        factor();
+        output.emitLine("MOVE (SP)-,D1");
+        output.emitLine("EXS.L D0");
+        output.emitLine("DIVS D1,D0");
+    }
+
+    void Parser::add()
+    {
+        input.match('+');
+        term();
+        output.emitLine("ADD (SP)+.D0");
+    }
+
+    void Parser::subtract()
+    {
+        input.match('-');
+        term();
+        output.emitLine("SUB (SP)+,D0");
+        output.emitLine("NEG D0");
+    }
+
+    void Parser::term()
+    {
+        signedFactor();
+        while (input.getChar() == '*' || input.getChar() == '/') {
+            output.emitLine("MOVE D0,(SP)-");
+            switch (input.getChar()) {
+                case '*':
+                    multiply();
+                    break;
+                case '/':
+                    divide();
+                    break;
+            }
+        }
     }
 
     void Parser::boolExpression()

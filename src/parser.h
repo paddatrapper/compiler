@@ -24,11 +24,20 @@ class Parser
         void condition();
         void expression();
         void relation();
+        void variable();
 
         void equals();
         void notEquals();
         void lessThan();
         void greaterThan();
+
+        void multiply();
+        void divide();
+        void add();
+        void subtract();
+        void term();
+        void factor();
+        void signedFactor();
 
         void boolExpression();
         void boolOr();
