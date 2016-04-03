@@ -32,24 +32,30 @@ namespace compiler {
         return look;
     }
 
-    char Input::getName()
+    std::string Input::getName()
     {
         if (!Cradle::isAlpha(getChar())) {
             Reporter::expected("Name", getChar());
         }
-        char c = getChar();
-        getNextChar();
-        return c;
+        std::string name = "";
+        while (Cradle::isAlNum(getChar())) {
+            name += getChar();
+            getNextChar();
+        }
+        return name;
     }
 
-    char Input::getNum()
+    std::string Input::getNum()
     {
         if (!Cradle::isDigit(getChar())) {
             Reporter::expected("Integer", getChar());
         }
-        char c = getChar();
-        getNextChar();
-        return c;
+        std::string num = "";
+        while (Cradle::isDigit(getChar())) {
+            num += getChar();
+            getNextChar();
+        }
+        return num;
     }
 
     bool Input::getBoolean()
