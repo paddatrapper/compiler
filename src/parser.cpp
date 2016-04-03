@@ -131,14 +131,14 @@ namespace compiler {
 
     void Parser::variable()
     {
-        char name = input.getName();
+        std::string name = input.getName();
         if (input.getChar() == '(') {
             input.match('(');
             expression();
             input.match(')');
-            output.emitLine("BSR " + Cradle::toString(name));
+            output.emitLine("BSR " + name);
         } else {
-            output.emitLine("MOVE " + Cradle::toString(name) + "(PC),D0");
+            output.emitLine("MOVE " + name + "(PC),D0");
         }
     }
 
@@ -151,7 +151,7 @@ namespace compiler {
         } else if (Cradle::isAlpha(input.getChar())) {
             variable();
         } else {
-            output.emitLine("MOVE #" + Cradle::toString(input.getNum()) + ",D0");
+            output.emitLine("MOVE #" + input.getNum() + ",D0");
         }
     }
 
@@ -162,7 +162,7 @@ namespace compiler {
         } else if (input.getChar() == '-') {
             input.getNextChar();
             if (Cradle::isDigit(input.getChar())) {
-                output.emitLine("MOVE #-" + Cradle::toString(input.getNum()) + ",D0");
+                output.emitLine("MOVE #-" + input.getNum() + ",D0");
             } else {
                 factor();
                 output.emitLine("NEG D0");
@@ -355,14 +355,14 @@ namespace compiler {
         std::string l1 = newLabel();
         std::string l2 = newLabel();
         input.match('(');
-        char name = input.getName();
+        std::string name = input.getName();
         input.match('=');
         expression();
         output.emitLine("SUBQ #1,D0");
-        output.emitLine("LEA " + Cradle::toString(name) + "(PC),A0");
+        output.emitLine("LEA " + name + "(PC),A0");
         output.emitLine("MOVE D0,-(SP)");
         output.postLabel(l1);
-        output.emitLine("LEA " + Cradle::toString(name) + "(PC),A0");
+        output.emitLine("LEA " + name + "(PC),A0");
         output.emitLine("MOVE (A0),D0");
         output.emitLine("ADDQ #1,D0");
         output.emitLine("MOVE D0,(A0)");
@@ -406,10 +406,10 @@ namespace compiler {
 
     void Parser::assignment()
     {
-        char name = input.getName();
+        std::string name = input.getName();
         input.match('=');
         boolExpression();
-        output.emitLine("LEA " + Cradle::toString(name) + "(PC),A0");
+        output.emitLine("LEA " + name + "(PC),A0");
         output.emitLine("MOVE D0,(A0)");
     }
 
@@ -424,13 +424,4 @@ namespace compiler {
     {
         return "L" + Cradle::toString(labelCount++);
     }
-}
-/**
- * Main
- */
-int main()
-{
-    compiler::Parser parser{};
-    parser.program();
-    return EXIT_SUCCESS;
 }

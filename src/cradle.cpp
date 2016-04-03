@@ -36,7 +36,13 @@ namespace compiler {
 
     bool Cradle::isWhite(char c)
     {
-        return c == ' ' || c == '\t';
+        return isspace(c);
+    }
+
+    bool Cradle::isOp(char c)
+    {
+        return c == '+' || c == '-' || c == '*' || c == '/' ||
+            c == '<' || c == '>' || c == '=';
     }
 
     std::string Cradle::toString(char c)
